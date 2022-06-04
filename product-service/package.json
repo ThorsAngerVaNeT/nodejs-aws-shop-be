@@ -1,0 +1,17 @@
+{
+  "name": "product-service",
+  "version": "1.0.0",
+  "description": "Product service for AWS shop",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Vadzim Antonau",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "serverless-offline": "^8.8.0",
+    "serverless-webpack": "^5.7.1"
+  }
+}
