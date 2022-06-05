@@ -1,6 +1,4 @@
 'use strict';
-const fs = require('fs/promises');
-const path = require('path');
 const { getProductsListFromDB } = require('../db/db.service');
 
 const getProductsList = async event => {
@@ -13,7 +11,7 @@ const getProductsList = async event => {
     };
   } catch (error) {
     return {
-      statusCode: err.statusCode || 500,
+      statusCode: error.statusCode || 500,
       body: JSON.stringify({ error: error.message }, null, 2),
     };
   }
