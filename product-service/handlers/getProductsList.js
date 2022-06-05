@@ -7,14 +7,26 @@ const getProductsListFromDB = async () => {
     const filePath = path.join(__dirname, '..', 'db', 'productList.json');
     return await fs.readFile(filePath, { encoding: 'utf-8' });
   } catch (error) {
-    return JSON.stringify({ error: 'DB not found!' });
+    const err = new Error('DB not found!');
+    err.statusCode = 404;
+    throw err;
   }
 };
 
-module.exports.getProductsList = async event => {
-  const productList = (await getProductsListFromDB()) || '[]';
+const getProductsList = async event => {
+  try {
+    const productList = (await getProductsListFromDB()) || '[]';
+  } catch (error) {
+    return {
+      statusCode: err.statusCode || 500,
+      body: JSON.stringify({ error: error.message }, null, 2),
+    };
+  }
+
   return {
     statusCode: 200,
     body: productList,
   };
 };
+
+module.exports = { getProductsList, getProductsListFromDB };
