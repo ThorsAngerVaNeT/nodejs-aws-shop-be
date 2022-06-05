@@ -1,9 +1,9 @@
 'use strict';
-const { getProductsListFromDB } = require('../db/db.service');
+import { getAll } from '../db/product.json.repository';
 
-const getProductsList = async event => {
+export const getProductsList = async event => {
   try {
-    const productList = (await getProductsListFromDB()) || '[]';
+    const productList = (await getAll()) || [];
 
     return {
       statusCode: 200,
@@ -12,7 +12,7 @@ const getProductsList = async event => {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'OPTIONS,GET',
       },
-      body: productList,
+      body: JSON.stringify(productList),
     };
   } catch (error) {
     return {
@@ -21,5 +21,3 @@ const getProductsList = async event => {
     };
   }
 };
-
-module.exports = { getProductsList, getProductsListFromDB };

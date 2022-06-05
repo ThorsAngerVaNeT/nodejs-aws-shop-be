@@ -1,16 +1,15 @@
 'use strict';
-const { getProductsListFromDB } = require('../db/db.service');
+import { getById } from '../db/product.json.repository';
 
-module.exports.getProductsById = async event => {
+export const getProductsById = async event => {
   try {
     const { productId } = event.pathParameters || {};
-    const productList = JSON.parse((await getProductsListFromDB()) || '[]');
-    const product = productList.find(p => p.id === productId);
+    const product = await getById(productId);
 
     if (!product)
       return {
         statusCode: 404,
-        body: JSON.stringify({ error: `Product with id ${productId} not found!` }, null, 2),
+        body: JSON.stringify({ error: `Product with id "${productId}" not found!` }, null, 2),
       };
 
     return {
