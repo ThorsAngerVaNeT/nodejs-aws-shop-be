@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('fs/promises');
 const path = require('path');
-const { getProductsListFromDB } = require('./getProductsList');
+const { getProductsListFromDB } = require('../db/db.service');
 
 module.exports.getProductsById = async event => {
   try {
