@@ -16,17 +16,17 @@ const getProductsListFromDB = async () => {
 const getProductsList = async event => {
   try {
     const productList = (await getProductsListFromDB()) || '[]';
+
+    return {
+      statusCode: 200,
+      body: productList,
+    };
   } catch (error) {
     return {
       statusCode: err.statusCode || 500,
       body: JSON.stringify({ error: error.message }, null, 2),
     };
   }
-
-  return {
-    statusCode: 200,
-    body: productList,
-  };
 };
 
 module.exports = { getProductsList, getProductsListFromDB };
