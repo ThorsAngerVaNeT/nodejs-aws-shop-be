@@ -1,4 +1,4 @@
-import { getProductsById } from '../handlers/getProductsById';
+import { handler as getProductsById } from '../handlers/getProductsById';
 import productList from '../db/productList.json';
 
 const WRONG_ID = { pathParameters: { productId: '773b03e8-e1f0-464a-bc50-cf48f36a942d' } };

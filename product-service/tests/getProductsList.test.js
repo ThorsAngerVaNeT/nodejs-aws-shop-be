@@ -1,4 +1,4 @@
-import { getProductsList } from '../handlers/getProductsList';
+import { handler as getProductsList } from '../handlers/getProductsList';
 import productList from '../db/productList.json';
 
 test('getProductsList response should be equal to productList.json', async () => {

@@ -32,17 +32,19 @@ plugins:
 
 functions:
   getProductsList:
-    handler: handler.getProductsList
+    handler: handlers/getProductsList.handler
     events:
-      - httpApi:
-          path: /products
+      - http:
+          path: products
           method: get
+          cors: true
   getProductsById:
-    handler: handler.getProductsById
+    handler: handlers/getProductsById.handler
     events:
-      - httpApi:
-          path: /products/{productId}
+      - http:
+          path: products/{productId}
           method: get
+          cors: true
 
 custom:
   serverless-offline:
