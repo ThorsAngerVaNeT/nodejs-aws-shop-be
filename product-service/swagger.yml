@@ -48,6 +48,12 @@ paths:
                       type: string
                       example: 'Herring Grays rubber-soledChukka boots in Ginger Suede'
                       description: Product title
+                    photos:
+                      type: array
+                      items:
+                        type: string
+                        example: "01.jpg"
+                      description: Array of product photo files
         '500':
           description: Internal Server Error
           content:
@@ -99,6 +105,12 @@ paths:
                     type: string
                     example: 'Herring Grays rubber-soledChukka boots in Ginger Suede'
                     description: Product title
+                  photos:
+                    type: array
+                    items:
+                      type: string
+                      example: "01.jpg"
+                    description: Array of product photo files
         '404':
           description: Product not found error
           content:
