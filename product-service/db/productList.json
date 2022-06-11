@@ -6,7 +6,8 @@
     "sole": "Leather sole with rubber inserts",
     "id": "b94b2ae4-b3de-4f56-b773-0483ffb42031",
     "price": 275,
-    "title": "Taft The Jack Shoe in London"
+    "title": "Taft The Jack Shoe in London",
+    "photos": ["01.jpg"]
   },
   {
     "count": 6,
@@ -15,7 +16,8 @@
     "sole": "Leather Sole",
     "id": "ce80facb-9804-489b-9b9a-b3a1045df2bd",
     "price": 325,
-    "title": "Carlos Santos 9517 in Light Brown Suede"
+    "title": "Carlos Santos 9517 in Light Brown Suede",
+    "photos": ["01.jpg"]
   },
   {
     "count": 7,
@@ -24,7 +26,8 @@
     "sole": "Dainite Rubber Sole",
     "id": "fec85c80-b81e-4eef-8e59-83b3362c1497",
     "price": 465,
-    "title": "Shoepassion No. 6714 Oxford Boots"
+    "title": "Shoepassion No. 6714 Oxford Boots",
+    "photos": ["01.jpg"]
   },
   {
     "count": 12,
@@ -33,7 +36,8 @@
     "sole": "Dainite Rubber Sole",
     "id": "27f6f2da-0dd4-4b90-8fd3-110db683076e",
     "price": 440,
-    "title": "Carmina Work Boots Rain"
+    "title": "Carmina Work Boots Rain",
+    "photos": ["01.jpg"]
   },
   {
     "count": 7,
@@ -42,7 +46,8 @@
     "sole": "Dainite Rubber Sole",
     "id": "2265bc45-c093-4524-89fd-5134b4ff1d1c",
     "price": 196,
-    "title": "Herring Grays rubber-soledChukka boots in Ginger Suede"
+    "title": "Herring Grays rubber-soledChukka boots in Ginger Suede",
+    "photos": ["01.jpg"]
   },
   {
     "count": 8,
@@ -51,7 +56,8 @@
     "sole": "Ridgeway Rubber Sole",
     "id": "84688c05-9198-491e-b0fd-859d81aa2ce3",
     "price": 353,
-    "title": "Sons of Henrey Field Boot in Black Utah"
+    "title": "Sons of Henrey Field Boot in Black Utah",
+    "photos": ["01.jpg"]
   },
   {
     "count": 2,
@@ -60,7 +66,8 @@
     "sole": "Leather Sole",
     "id": "cb52ad4f-b0a6-4f5e-bfc7-4f3f56f58554",
     "price": 413,
-    "title": "Carmina Chelsea Boots 80216 in Brown Museum"
+    "title": "Carmina Chelsea Boots 80216 in Brown Museum",
+    "photos": ["01.jpg"]
   },
   {
     "count": 3,
@@ -69,7 +76,8 @@
     "sole": "Leather Sole",
     "id": "bc53efe2-1032-4464-ba56-b1a29c541809",
     "price": 343,
-    "title": "Sons of Henrey George SpTD in Chestnut Jamaica Kudu"
+    "title": "Sons of Henrey George SpTD in Chestnut Jamaica Kudu",
+    "photos": ["01.jpg"]
   },
   {
     "count": 5,
@@ -78,7 +86,8 @@
     "sole": "City Rubber Sole",
     "id": "7d386117-e576-4896-adf2-08c027e2ec15",
     "price": 438.56,
-    "title": "TLB Mallorca Artista Black Chelsea Boots"
+    "title": "TLB Mallorca Artista Black Chelsea Boots",
+    "photos": ["01.jpg"]
   },
   {
     "count": 4,
@@ -87,6 +96,7 @@
     "sole": "JR Leather Sole",
     "id": "ae1e4a57-2c31-413f-8f36-3cc159897448",
     "price": 445,
-    "title": "Alt English II * F"
+    "title": "Vass Budapest Alt English II * F",
+    "photos": ["01.jpg"]
   }
 ]
