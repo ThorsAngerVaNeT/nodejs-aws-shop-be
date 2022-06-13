@@ -1,6 +1,6 @@
 'use strict';
 import { constants as httpConstants } from 'http2';
-import { CORS_HEADER } from '../common/common';
+import { createResponse } from '../common/common';
 import { getById } from '../db/product.json.repository';
 
 export const handler = async event => {
@@ -8,23 +8,10 @@ export const handler = async event => {
     const { productId } = event.pathParameters || {};
     const product = await getById(productId);
 
-    if (!product)
-      return {
-        statusCode: httpConstants.HTTP_STATUS_NOT_FOUND,
-        headers: CORS_HEADER,
-        body: JSON.stringify({ error: `Product with id "${productId}" not found!` }, null, 2),
-      };
+    if (!product) return createResponse(httpConstants.HTTP_STATUS_NOT_FOUND, { error: `Product with id "${productId}" not found!` });
 
-    return {
-      statusCode: httpConstants.HTTP_STATUS_OK,
-      headers: CORS_HEADER,
-      body: JSON.stringify(product, null, 2),
-    };
+    return createResponse(httpConstants.HTTP_STATUS_OK, product);
   } catch (error) {
-    return {
-      statusCode: error.statusCode || httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-      headers: CORS_HEADER,
-      body: JSON.stringify({ error: error.message }, null, 2),
-    };
+    return createResponse(error.statusCode || httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR, { error: error.message });
   }
 };
