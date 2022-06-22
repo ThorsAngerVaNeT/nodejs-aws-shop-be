@@ -11,11 +11,11 @@ export const getQuery = async (query, params = []) => {
   return res.rows;
 };
 
+/* PG TRANSACTION - Transaction based creation of product */
 export const insertProduct = async (productParams = [], stocksParams = []) => {
   const client = new Client(PG_CONFIG);
   try {
     await client.connect();
-    console.log('client: ', client);
 
     const productQuery = 'insert into products (title, description, price, last, sole, image_url) values ($1,$2,$3,$4,$5,$6)';
     const stockQuery = 'insert into stocks (product_id, count) values ($1,$2)';
