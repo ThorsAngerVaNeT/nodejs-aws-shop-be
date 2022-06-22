@@ -18,7 +18,17 @@ plugins:
   - serverless-offline
   - serverless-webpack
 
+package:
+  individually: true
+
 functions:
+  createProduct:
+    handler: handlers/createProduct.handler
+    events:
+      - http:
+          path: products
+          method: post
+          cors: true
   getProductsList:
     handler: handlers/getProductsList.handler
     events:
