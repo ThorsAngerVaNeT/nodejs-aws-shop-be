@@ -1,7 +1,7 @@
 'use strict';
 import { constants as httpConstants } from 'http2';
 import { createResponse } from '../common/common';
-import { getById } from '../db/product.json.repository';
+import { getById } from '../db/product.pg.repository';
 
 export const handler = async event => {
   try {
