@@ -5,6 +5,7 @@ import { create as createProduct } from '../db/product.pg.repository';
 
 export const handler = async event => {
   try {
+    console.log(`Incoming request: ${JSON.stringify(event)}`);
     const productData = JSON.parse(event.body);
     const product = await createProduct(productData);
 

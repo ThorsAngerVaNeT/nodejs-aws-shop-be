@@ -5,6 +5,7 @@ import { getAll } from '../db/product.pg.repository';
 
 export const handler = async event => {
   try {
+    console.log(`Incoming request: ${JSON.stringify(event)}`);
     const productList = (await getAll()) || [];
 
     return createResponse(httpConstants.HTTP_STATUS_OK, productList);

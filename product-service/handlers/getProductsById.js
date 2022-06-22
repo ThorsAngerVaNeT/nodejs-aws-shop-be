@@ -5,6 +5,7 @@ import { getById } from '../db/product.pg.repository';
 
 export const handler = async event => {
   try {
+    console.log(`Incoming request: ${JSON.stringify(event)}`);
     const { productId } = event.pathParameters || {};
     const product = await getById(productId);
 
