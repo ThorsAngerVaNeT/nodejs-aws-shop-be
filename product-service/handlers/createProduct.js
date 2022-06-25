@@ -11,7 +11,7 @@ export const handler = async event => {
 
     if (!product) return createResponse(httpConstants.HTTP_STATUS_BAD_REQUEST, { error: `Product is not created. Unknown error!` });
 
-    return createResponse(httpConstants.HTTP_STATUS_OK, product);
+    return createResponse(httpConstants.HTTP_STATUS_CREATED, product);
   } catch (error) {
     return createResponse(error.statusCode || httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR, { error: error.message });
   }
