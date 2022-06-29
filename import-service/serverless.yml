@@ -14,12 +14,16 @@ provider:
           Action:
             - 's3:ListBucket'
           Resource:
-            - ${env:BUCKET_ARN}
+            - arn:aws:s3:::${env:BUCKET_NAME}
         - Effect: 'Allow'
           Action:
             - 's3:*'
           Resource:
-            - ${env:BUCKET_ARN}/*
+            - arn:aws:s3:::${env:BUCKET_NAME}/*
+
+plugins:
+  - serverless-offline
+  - serverless-webpack
 
 functions:
   importProductsFile:
@@ -27,9 +31,16 @@ functions:
     events:
       - http:
           path: import
-          method: post
+          method: get
           cors: true
           request:
             parameters:
               querystrings:
                 name: true
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
