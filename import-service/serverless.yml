@@ -7,6 +7,9 @@ provider:
   runtime: nodejs16.x
   stage: dev
   region: eu-west-1
+  environment:
+    REGION: ${env:REGION}
+    BUCKET_NAME: ${env:BUCKET_NAME}
   iam:
     role:
       statements:
@@ -37,16 +40,6 @@ functions:
             parameters:
               querystrings:
                 name: true
-  importFileParser:
-    handler: handlers/importFileParser.handler
-    events:
-      - s3:
-          bucket: ${env:BUCKET_NAME}
-          event: s3:ObjectCreated:*
-          rules:
-            - prefix: uploaded/
-            - suffix: .csv
-          existing: true
 
 custom:
   serverless-offline:
