@@ -2,10 +2,8 @@
 import { constants as httpConstants } from 'http2';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import csv from 'csv-parser';
-import { createResponse } from '../common/common';
+import { BUCKET_NAME, createResponse } from '../common/common';
 import { s3Client } from '../common/s3Client';
-
-const { BUCKET_NAME } = process.env;
 
 export const handler = async event => {
   try {
