@@ -7,12 +7,24 @@ import { s3Client } from '../common/s3Client';
 
 export const handler = async event => {
   try {
-    const { key: Key } = event.Records[0].s3.object;
+    const { key: objectKey } = event.Records[0].s3.object;
+
+    await parseCSV(objectKey);
+    await moveFile(BUCKET_NAME, objectKey, 'parsed');
+
+    return createResponse(httpConstants.HTTP_STATUS_OK, '');
+  } catch (error) {
+    console.error(error);
+    return createResponse(error.statusCode || httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR, { error: error.message });
+  }
+};
+
+const parseCSV = async objectKey => {
+  try {
     const params = {
       Bucket: BUCKET_NAME,
-      Key,
+      Key: objectKey,
     };
-
     const command = new GetObjectCommand(params);
 
     const { Body: s3Stream } = await s3Client.send(command);
@@ -24,14 +36,14 @@ export const handler = async event => {
       })
       .on('end', async () => {
         console.log('CSV parsing is done!');
-        await moveFile(BUCKET_NAME, Key, 'parsed');
-        return createResponse(httpConstants.HTTP_STATUS_OK, 'CSV parsing is done!');
       })
       .on('error', err => {
+        console.error(err);
         throw err;
       });
   } catch (error) {
-    return createResponse(error.statusCode || httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR, { error: error.message });
+    console.error(error);
+    throw error;
   }
 };
 
