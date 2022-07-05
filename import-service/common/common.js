@@ -8,4 +8,4 @@ export const CORS_HEADER = {
 
 export const createResponse = (statusCode, body, headers = CORS_HEADER) => ({ statusCode, headers, body: JSON.stringify(body, null, 2) });
 
-export const { BUCKET_NAME, REGION } = process.env;
+export const { BUCKET_NAME, REGION, SQS_QUEUE_URL } = process.env;

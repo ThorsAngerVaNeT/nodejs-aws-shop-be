@@ -10,6 +10,7 @@ provider:
   environment:
     REGION: ${env:REGION}
     BUCKET_NAME: ${env:BUCKET_NAME}
+    SQS_QUEUE_URL: ${cf.product-service-dev.catalogItemsQueue}
   iam:
     role:
       statements:
