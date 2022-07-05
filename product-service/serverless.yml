@@ -12,9 +12,8 @@ provider:
     PG_PORT: ${env:PG_PORT}
     PG_DATABASE: ${env:PG_DATABASE}
     PG_USER: ${env:PG_USER}
-    PG_PASSWORD: ${env:PG_PASSWORD}
-    SQS_QUEUE_URL: { Ref: catalogItemsQueue }     	
   vpc:
+    PG_PASSWORD: ${env:PG_PASSWORD}
     securityGroupIds:
       - sg-038c18cae6bfafe11
       - sg-054d53513ac91c691
