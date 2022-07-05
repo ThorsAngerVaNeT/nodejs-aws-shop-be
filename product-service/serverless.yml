@@ -13,7 +13,15 @@ provider:
     PG_DATABASE: ${env:PG_DATABASE}
     PG_USER: ${env:PG_USER}
     PG_PASSWORD: ${env:PG_PASSWORD}
-    SQS_QUEUE_URL: { Ref: catalogItemsQueue }
+    SQS_QUEUE_URL: { Ref: catalogItemsQueue }     	
+  vpc:
+    securityGroupIds:
+      - sg-038c18cae6bfafe11
+      - sg-054d53513ac91c691
+    subnetIds:
+      - subnet-018b134de94901cc6
+      - subnet-0559c07937e1a9d65
+      - subnet-02fa2c523d3aea4c8
   iam:
     role:
       statements:
