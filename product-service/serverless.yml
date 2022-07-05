@@ -13,6 +13,22 @@ provider:
     PG_DATABASE: ${env:PG_DATABASE}
     PG_USER: ${env:PG_USER}
     PG_PASSWORD: ${env:PG_PASSWORD}
+    SQS_QUEUE_URL: { Ref: catalogItemsQueue }
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 'sqs:*'
+          Resource:
+            - Fn::GetAtt: [catalogItemsQueue, Arn]
+
+resources:
+  Resources:
+    catalogItemsQueue:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: 'vanet-shop-sqs'
 
 plugins:
   - serverless-offline
@@ -43,6 +59,15 @@ functions:
           path: products/{productId}
           method: get
           cors: true
+  catalogBatchProcess:
+    handler: handlers/catalogBatchProcess.handler
+    events:
+      - sqs:
+          batchSize: 5
+          arn:
+            Fn::GetAtt:
+              - catalogItemsQueue
+              - Arn
 
 custom:
   serverless-offline:
