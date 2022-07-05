@@ -12,8 +12,8 @@ provider:
     PG_PORT: ${env:PG_PORT}
     PG_DATABASE: ${env:PG_DATABASE}
     PG_USER: ${env:PG_USER}
-  vpc:
     PG_PASSWORD: ${env:PG_PASSWORD}
+  vpc:
     securityGroupIds:
       - sg-038c18cae6bfafe11
       - sg-054d53513ac91c691
@@ -36,6 +36,10 @@ resources:
       Type: 'AWS::SQS::Queue'
       Properties:
         QueueName: 'vanet-shop-sqs'
+  Outputs:
+    catalogItemsQueueArn:
+      Value:
+        Fn::GetAtt: [catalogItemsQueue, Arn]
 
 plugins:
   - serverless-offline
