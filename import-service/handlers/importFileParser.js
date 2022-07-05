@@ -1,23 +1,11 @@
 'use strict';
 import { constants as httpConstants } from 'http2';
 import { GetObjectCommand, CopyObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { SendMessageCommand } from '@aws-sdk/client-sqs';
 import csv from 'csv-parser';
-import { BUCKET_NAME, createResponse } from '../common/common';
+import { BUCKET_NAME, createResponse, SQS_QUEUE_URL } from '../common/common';
 import { s3Client } from '../common/s3Client';
-
-export const handler = async event => {
-  try {
-    const { key: objectKey } = event.Records[0].s3.object;
-
-    await parseCSV(objectKey);
-    await moveFile(BUCKET_NAME, objectKey, 'parsed');
-
-    return createResponse(httpConstants.HTTP_STATUS_OK, '');
-  } catch (error) {
-    console.error(error);
-    return createResponse(error.statusCode || httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR, { error: error.message });
-  }
-};
+import { sqsClient } from '../common/sqsClient';
 
 const parseCSV = async objectKey => {
   try {
@@ -25,17 +13,21 @@ const parseCSV = async objectKey => {
       Bucket: BUCKET_NAME,
       Key: objectKey,
     };
-    const command = new GetObjectCommand(params);
 
+    const command = new GetObjectCommand(params);
     const { Body: s3Stream } = await s3Client.send(command);
 
     s3Stream
       .pipe(csv())
-      .on('data', data => {
-        console.log(data);
+      .on('data', async data => {
+        const message = {
+          MessageBody: JSON.stringify(data),
+          QueueUrl: SQS_QUEUE_URL,
+        };
+        await sqsClient.send(new SendMessageCommand(message));
       })
       .on('end', async () => {
-        console.log('CSV parsing is done!');
+        await moveFile(BUCKET_NAME, objectKey, 'parsed');
       })
       .on('error', err => {
         console.error(err);
@@ -70,5 +62,20 @@ const moveFile = async (bucketName, objectKey, destinationFolderName) => {
   } catch (err) {
     console.log('Error', err);
     throw err;
+  }
+};
+
+export const handler = async event => {
+  console.log('event: ', event);
+  try {
+    const { key: objectKey } = event.Records[0].s3.object;
+
+    await parseCSV(objectKey);
+    // await moveFile(BUCKET_NAME, objectKey, 'parsed');
+
+    return createResponse(httpConstants.HTTP_STATUS_OK, '');
+  } catch (error) {
+    console.error(error);
+    return createResponse(error.statusCode || httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR, { error: error.message });
   }
 };
