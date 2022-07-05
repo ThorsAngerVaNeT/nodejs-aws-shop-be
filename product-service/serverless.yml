@@ -55,9 +55,9 @@ resources:
         TopicArn:
           Ref: createProductTopic
   Outputs:
-    catalogItemsQueueArn:
+    catalogItemsQueueURL:
       Value:
-        Fn::GetAtt: [catalogItemsQueue, Arn]
+        Ref: catalogItemsQueue
 
 plugins:
   - serverless-offline
