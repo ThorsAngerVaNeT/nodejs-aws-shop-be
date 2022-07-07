@@ -60,7 +60,7 @@ jest.mock('../db/pg.client', () => {
 
 const snsMock = mockClient(SNSClient);
 
-describe('should insert product and use SNS PublishCommand same times as EVENT.Records.length', () => {
+describe('should insert product, use SNS PublishCommand and run them same times as EVENT.Records.length', () => {
   let client;
 
   beforeEach(() => {
