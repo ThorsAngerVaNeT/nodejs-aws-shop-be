@@ -1,34 +1,29 @@
 'use strict';
 import { constants as httpConstants } from 'http2';
+import { PublishCommand } from '@aws-sdk/client-sns';
 import { createResponse } from '../common/common';
 import { create as createProduct } from '../db/product.pg.repository';
-
-const addProducts = async products => {
-  try {
-    const result = [];
-
-    for (const { body } of products) {
-      const productData = JSON.parse(body);
-      const product = await createProduct(productData);
-      if (product) result.push(product);
-    }
-
-    return result;
-  } catch (error) {
-    console.log('error: ', error);
-    throw error;
-  }
-};
+import { snsClient } from '../common/snsClient.js';
+import { SNS_ARN } from '../common/config';
 
 export const handler = async event => {
   try {
-    const { Records: records } = event;
+    const records = event.Records.map(({ body }) => JSON.parse(body));
 
-    const result = await addProducts(records);
+    for (const record of records) {
+      const product = await createProduct(record);
+      if (product) {
+        const input = {
+          Subject: 'Product was added to the DB',
+          Message: JSON.stringify(record),
+          TopicArn: SNS_ARN,
+        };
 
-    return createResponse(httpConstants.HTTP_STATUS_CREATED, result);
+        const command = new PublishCommand(input);
+        await snsClient.send(new PublishCommand(command));
+      }
+    }
   } catch (error) {
     console.log('error: ', error);
-    return createResponse(error.statusCode || httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR, { error: error.message });
   }
 };
