@@ -20,7 +20,7 @@ export const handler = async event => {
         };
 
         const command = new PublishCommand(input);
-        await snsClient.send(new PublishCommand(command));
+        await snsClient.send(command);
       }
     }
   } catch (error) {

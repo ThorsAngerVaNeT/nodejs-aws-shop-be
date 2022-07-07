@@ -31,6 +31,9 @@ provider:
           Resource:
             - Fn::GetAtt: [catalogItemsQueue, Arn]
 
+package:
+  individually: true
+
 resources:
   Resources:
     catalogItemsQueue:

@@ -28,7 +28,7 @@ const parseCSV = async objectKey => {
         await sqsClient.send(command);
       })
       .on('end', async () => {
-        await moveFile(BUCKET_NAME, objectKey, 'parsed');
+        console.log('File is parsed!');
       })
       .on('error', err => {
         console.error(err);
@@ -67,11 +67,11 @@ const moveFile = async (bucketName, objectKey, destinationFolderName) => {
 };
 
 export const handler = async event => {
-  console.log('event: ', event);
   try {
     const { key: objectKey } = event.Records[0].s3.object;
 
     await parseCSV(objectKey);
+    await moveFile(BUCKET_NAME, objectKey, 'parsed');
 
     return createResponse(httpConstants.HTTP_STATUS_OK, { message: 'File parsed' });
   } catch (error) {
