@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
-export const { PG_HOST, PG_PORT, PG_DATABASE, PG_USER, PG_PASSWORD, REGION, SNS_ARN } = process.env;
+export const { PG_HOST, PG_PORT, PG_DATABASE, PG_USER, PG_PASSWORD, REGION, SNS_ARN, NORMAL_STOCK, OVERSTOCKED, OVERSTOCKED_COUNT } =
+  process.env;
 
 export const PG_CONFIG = {
   user: PG_USER,

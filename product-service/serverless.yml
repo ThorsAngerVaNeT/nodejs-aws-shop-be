@@ -16,6 +16,9 @@ provider:
     REGION: ${self:provider.region}
     SNS_ARN:
       Ref: createProductTopic
+    OVERSTOCKED_COUNT: ${env:OVERSTOCKED_COUNT}
+    OVERSTOCKED: ${env:OVERSTOCKED}
+    NORMAL_STOCK: ${env:NORMAL_STOCK}
 
   iam:
     role:
@@ -39,6 +42,19 @@ resources:
         Protocol: email
         TopicArn:
           Ref: createProductTopic
+        FilterPolicy:
+          Count:
+            - ${env:NORMAL_STOCK}
+    createProductOverstockSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: ${env:EMAIL_OVERSTOCKED}
+        Protocol: email
+        TopicArn:
+          Ref: createProductTopic
+        FilterPolicy:
+          Count:
+            - ${env:OVERSTOCKED}
 
 plugins:
   - serverless-offline
