@@ -10,7 +10,8 @@ provider:
   environment:
     REGION: ${env:REGION}
     BUCKET_NAME: ${env:BUCKET_NAME}
-    SQS_QUEUE_URL: ${cf:product-service-dev.catalogItemsQueueURL}
+    SQS_QUEUE_URL:
+      Ref: catalogItemsQueue
   iam:
     role:
       statements:
@@ -24,6 +25,25 @@ provider:
             - 's3:*'
           Resource:
             - arn:aws:s3:::${env:BUCKET_NAME}/*
+        - Effect: 'Allow'
+          Action:
+            - 'sqs:*'
+          Resource:
+            - Fn::GetAtt: [catalogItemsQueue, Arn]
+
+resources:
+  Resources:
+    catalogItemsQueue:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: 'vanet-shop-sqs'
+  Outputs:
+    catalogItemsQueueURL:
+      Value:
+        Ref: catalogItemsQueue
+    catalogItemsQueueArn:
+      Value:
+        Fn::GetAtt: [catalogItemsQueue, Arn]
 
 plugins:
   - serverless-offline

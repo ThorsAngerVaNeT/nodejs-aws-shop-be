@@ -13,24 +13,13 @@ provider:
     PG_DATABASE: ${env:PG_DATABASE}
     PG_USER: ${env:PG_USER}
     PG_PASSWORD: ${env:PG_PASSWORD}
+    REGION: ${self:provider.region}
     SNS_ARN:
       Ref: createProductTopic
-  vpc:
-    securityGroupIds:
-      - sg-038c18cae6bfafe11
-      - sg-054d53513ac91c691
-    subnetIds:
-      - subnet-018b134de94901cc6
-      - subnet-0559c07937e1a9d65
-      - subnet-02fa2c523d3aea4c8
+
   iam:
     role:
       statements:
-        - Effect: 'Allow'
-          Action:
-            - 'sqs:*'
-          Resource:
-            - Fn::GetAtt: [catalogItemsQueue, Arn]
         - Effect: 'Allow'
           Action:
             - 'sns:*'
@@ -39,10 +28,6 @@ provider:
 
 resources:
   Resources:
-    catalogItemsQueue:
-      Type: 'AWS::SQS::Queue'
-      Properties:
-        QueueName: 'vanet-shop-sqs'
     createProductTopic:
       Type: AWS::SNS::Topic
       Properties:
@@ -54,10 +39,6 @@ resources:
         Protocol: email
         TopicArn:
           Ref: createProductTopic
-  Outputs:
-    catalogItemsQueueURL:
-      Value:
-        Ref: catalogItemsQueue
 
 plugins:
   - serverless-offline
@@ -93,10 +74,7 @@ functions:
     events:
       - sqs:
           batchSize: 5
-          arn:
-            Fn::GetAtt:
-              - catalogItemsQueue
-              - Arn
+          arn: '${cf:import-service-dev.catalogItemsQueueArn}'
 
 custom:
   serverless-offline:
