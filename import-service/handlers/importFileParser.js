@@ -24,7 +24,8 @@ const parseCSV = async objectKey => {
           MessageBody: JSON.stringify(data),
           QueueUrl: SQS_QUEUE_URL,
         };
-        await sqsClient.send(new SendMessageCommand(message));
+        const command = new SendMessageCommand(message);
+        await sqsClient.send(command);
       })
       .on('end', async () => {
         await moveFile(BUCKET_NAME, objectKey, 'parsed');
@@ -71,9 +72,8 @@ export const handler = async event => {
     const { key: objectKey } = event.Records[0].s3.object;
 
     await parseCSV(objectKey);
-    // await moveFile(BUCKET_NAME, objectKey, 'parsed');
 
-    return createResponse(httpConstants.HTTP_STATUS_OK, '');
+    return createResponse(httpConstants.HTTP_STATUS_OK, { message: 'File parsed' });
   } catch (error) {
     console.error(error);
     return createResponse(error.statusCode || httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR, { error: error.message });
