@@ -1,0 +1,59 @@
+service: import-service
+frameworkVersion: '3'
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: dev
+  region: eu-west-1
+  environment:
+    REGION: ${env:REGION}
+    BUCKET_NAME: ${env:BUCKET_NAME}
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 's3:ListBucket'
+          Resource:
+            - arn:aws:s3:::${env:BUCKET_NAME}
+        - Effect: 'Allow'
+          Action:
+            - 's3:*'
+          Resource:
+            - arn:aws:s3:::${env:BUCKET_NAME}/*
+
+plugins:
+  - serverless-offline
+  - serverless-webpack
+
+functions:
+  importProductsFile:
+    handler: handlers/importProductsFile.handler
+    events:
+      - http:
+          path: import
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                name: true
+  importFileParser:
+    handler: handlers/importFileParser.handler
+    events:
+      - s3:
+          bucket: ${env:BUCKET_NAME}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploaded/
+            - suffix: .csv
+          existing: true
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
