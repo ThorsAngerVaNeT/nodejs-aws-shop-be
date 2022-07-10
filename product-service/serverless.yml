@@ -28,6 +28,11 @@ provider:
             - 'sns:*'
           Resource:
             Ref: createProductTopic
+        - Effect: 'Allow'
+          Action:
+            - 'sqs:*'
+          Resource:
+            - '${cf:import-service-dev.catalogItemsQueueArn}'
 
 resources:
   Resources:
