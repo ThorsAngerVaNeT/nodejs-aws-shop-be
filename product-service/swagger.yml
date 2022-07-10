@@ -3,7 +3,7 @@ info:
   title: dev-product-service
   version: 2022-06-06 20:12:56UTC
 servers:
-  - url: https://9m5yuymnp8.execute-api.eu-west-1.amazonaws.com/
+  - url: https://4exlvh9kag.execute-api.eu-west-1.amazonaws.com/dev
 paths:
   /products:
     get:
@@ -48,12 +48,109 @@ paths:
                       type: string
                       example: 'Herring Grays rubber-soledChukka boots in Ginger Suede'
                       description: Product title
-                    photos:
-                      type: array
-                      items:
-                        type: string
-                        example: "01.jpg"
+                    image_url:
+                      type: string
+                      example: 'https://d1wh94yq5jmkrj.cloudfront.net/ce80facb-9804-489b-9b9a-b3a1045df2bd/01.jpg'
                       description: Array of product photo files
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+    post:
+      summary: Create product
+      description: Create product in database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                count:
+                  type: number
+                  example: 4
+                  description: Quantity in stock
+                description:
+                  type: string
+                  example: 'Herring Grays is a simpe but elegant chukka boot style with a Goodyear welted rubber stud sole. This colour comes with an extra pair of red laces to complement the red sole.'
+                  description: Description of product
+                last:
+                  type: string
+                  example: 'Picasso'
+                  description: Last which used for footwear made
+                sole:
+                  type: string
+                  example: 'Dainite Rubber Sole'
+                  description: Material and manufacturer of footwear sole
+                price:
+                  type: number
+                  example: 196
+                  description: Product price in USD
+                title:
+                  type: string
+                  example: 'Herring Grays rubber-soledChukka boots in Ginger Suede'
+                  description: Product title
+                image_url:
+                  type: string
+                  example: 'https://d1wh94yq5jmkrj.cloudfront.net/ce80facb-9804-489b-9b9a-b3a1045df2bd/01.jpg'
+                  description: Product photo URL
+      responses:
+        '201':
+          description: Created product object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+                    example: 4
+                    description: Quantity in stock
+                  description:
+                    type: string
+                    example: 'Herring Grays is a simpe but elegant chukka boot style with a Goodyear welted rubber stud sole. This colour comes with an extra pair of red laces to complement the red sole.'
+                    description: Description of product
+                  last:
+                    type: string
+                    example: 'Picasso'
+                    description: Last which used for footwear made
+                  sole:
+                    type: string
+                    example: 'Dainite Rubber Sole'
+                    description: Material and manufacturer of footwear sole
+                  id:
+                    type: string
+                    format: uuid
+                    example: '2265bc45-c093-4524-89fd-5134b4ff1d1c'
+                    description: Product UUID
+                  price:
+                    type: number
+                    example: 196
+                    description: Product price in USD
+                  title:
+                    type: string
+                    example: 'Herring Grays rubber-soledChukka boots in Ginger Suede'
+                    description: Product title
+                  image_url:
+                    type: string
+                    example: 'https://d1wh94yq5jmkrj.cloudfront.net/ce80facb-9804-489b-9b9a-b3a1045df2bd/01.jpg'
+                    description: Product photo URL
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
         '500':
           description: Internal Server Error
           content:
@@ -105,12 +202,10 @@ paths:
                     type: string
                     example: 'Herring Grays rubber-soledChukka boots in Ginger Suede'
                     description: Product title
-                  photos:
-                    type: array
-                    items:
-                      type: string
-                      example: "01.jpg"
-                    description: Array of product photo files
+                  image_url:
+                    type: string
+                    example: 'https://d1wh94yq5jmkrj.cloudfront.net/ce80facb-9804-489b-9b9a-b3a1045df2bd/01.jpg'
+                    description: Product photo URL
         '404':
           description: Product not found error
           content:
