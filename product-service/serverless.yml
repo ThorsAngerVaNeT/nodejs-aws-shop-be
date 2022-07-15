@@ -13,6 +13,53 @@ provider:
     PG_DATABASE: ${env:PG_DATABASE}
     PG_USER: ${env:PG_USER}
     PG_PASSWORD: ${env:PG_PASSWORD}
+    REGION: ${self:provider.region}
+    SNS_ARN:
+      Ref: createProductTopic
+    OVERSTOCKED_COUNT: ${env:OVERSTOCKED_COUNT}
+    OVERSTOCKED: ${env:OVERSTOCKED}
+    NORMAL_STOCK: ${env:NORMAL_STOCK}
+
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 'sns:*'
+          Resource:
+            Ref: createProductTopic
+        - Effect: 'Allow'
+          Action:
+            - 'sqs:*'
+          Resource:
+            - '${cf:import-service-dev.catalogItemsQueueArn}'
+
+resources:
+  Resources:
+    createProductTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: 'vanet-shop-sns-topic'
+    createProductSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: ${env:EMAIL}
+        Protocol: email
+        TopicArn:
+          Ref: createProductTopic
+        FilterPolicy:
+          Count:
+            - ${env:NORMAL_STOCK}
+    createProductOverstockSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: ${env:EMAIL_OVERSTOCKED}
+        Protocol: email
+        TopicArn:
+          Ref: createProductTopic
+        FilterPolicy:
+          Count:
+            - ${env:OVERSTOCKED}
 
 plugins:
   - serverless-offline
@@ -43,6 +90,12 @@ functions:
           path: products/{productId}
           method: get
           cors: true
+  catalogBatchProcess:
+    handler: handlers/catalogBatchProcess.handler
+    events:
+      - sqs:
+          batchSize: 5
+          arn: '${cf:import-service-dev.catalogItemsQueueArn}'
 
 custom:
   serverless-offline:
