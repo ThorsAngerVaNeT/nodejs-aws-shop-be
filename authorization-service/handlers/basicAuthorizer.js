@@ -1,11 +1,34 @@
 'use strict';
-import { constants as httpConstants } from 'http2';
-import { createResponse } from '../common/common';
 
-export const handler = async event => {
+export const handler = async (event, ctx, cb) => {
+  const { type, authorizationToken } = event;
+  console.log('event: ', event);
+  if (type === 'REQUEST') cb('Unauthorized');
+
   try {
-    return createResponse(httpConstants.HTTP_STATUS_OK, '');
+    const [, encodedCredentials] = authorizationToken.split(' ');
+    const decodedCredentials = Buffer.from(encodedCredentials, 'base64').toString('utf-8');
+    const [username, password] = decodedCredentials.split(':');
+
+    const storedPassword = process.env[username];
+    console.log('storedPassword: ', storedPassword);
+    console.log('username, password: ', username, password);
+
+    const access = !storedPassword || storedPassword !== password ? 'Deny' : 'Allow';
+    const policy = generatePolicy(encodedCredentials, event.methodArn, access);
+
+    cb(null, policy);
   } catch (error) {
-    return createResponse(error.statusCode || httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR, { error: error.message });
+    cb(`Unauthorized: ${error.message}`);
   }
+};
+
+const generatePolicy = (principalId, resource, access = 'Allow') => {
+  return {
+    principalId,
+    policyDocument: {
+      Version: '2012-10-17',
+      Statement: [{ Action: 'execute-api:Invoke', Effect: access, Resource: resource }],
+    },
+  };
 };
