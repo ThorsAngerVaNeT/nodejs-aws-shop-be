@@ -2,7 +2,6 @@
 
 export const handler = async (event, ctx, cb) => {
   const { type, authorizationToken } = event;
-  console.log('event: ', event);
   if (type === 'REQUEST') cb('Unauthorized');
 
   try {
@@ -11,8 +10,6 @@ export const handler = async (event, ctx, cb) => {
     const [username, password] = decodedCredentials.split(':');
 
     const storedPassword = process.env[username];
-    console.log('storedPassword: ', storedPassword);
-    console.log('username, password: ', username, password);
 
     const access = !storedPassword || storedPassword !== password ? 'Deny' : 'Allow';
     const policy = generatePolicy(encodedCredentials, event.methodArn, access);
