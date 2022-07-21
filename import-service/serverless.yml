@@ -64,6 +64,12 @@ functions:
             parameters:
               querystrings:
                 name: true
+          authorizer:
+            name: basicAuth
+            type: token
+            identitySource: method.request.header.Authorization
+            arn: ${cf.authorization-service-dev.BasicAuthorizerLambdaFunctionQualifiedArn}
+
   importFileParser:
     handler: handlers/importFileParser.handler
     events:
