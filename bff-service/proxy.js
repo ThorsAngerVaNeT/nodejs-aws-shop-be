@@ -1,7 +1,42 @@
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import { createProxyMiddleware, responseInterceptor } from 'http-proxy-middleware';
+import NodeCache from 'node-cache';
+
+const cacheService = new NodeCache({ stdTTL: 120, checkperiod: 120 });
+
+const preReqCacheCheck = (req, res, next) => {
+  if (req.originalUrl === '/products' && req.method === 'GET') {
+    const cacheValue = cacheService.get('getProductsList');
+    if (cacheValue) {
+      console.log('RESPONSE FROM CACHE');
+      res.setHeader('content-type', 'application/json');
+      return res.status(200).end(cacheValue);
+    }
+  }
+  next();
+};
+
+const onProxyRes = async (responseBuffer, proxyRes, req, res) => {
+  const response = responseBuffer.toString('utf8');
+  if (req.originalUrl === '/products' && req.method === 'GET') {
+    const cacheValue = cacheService.get('getProductsList');
+    if (!cacheValue) {
+      cacheService.set('getProductsList', response);
+    }
+  }
+  return response;
+};
 
 export const setupProxies = (app, services) => {
   services.forEach(([serviceName, serviceUrl]) => {
-    app.use(`/${serviceName}`, createProxyMiddleware({ target: serviceUrl, changeOrigin: true }));
+    app.use(
+      `/${serviceName}`,
+      preReqCacheCheck,
+      createProxyMiddleware({
+        target: serviceUrl,
+        changeOrigin: true,
+        selfHandleResponse: true,
+        onProxyRes: responseInterceptor(onProxyRes),
+      })
+    );
   });
 };
