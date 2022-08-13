@@ -5,9 +5,9 @@ import { setupProxies } from './proxy.js';
 
 const app = express();
 
-app.use(express.json());
-
 setupProxies(app, Object.entries(SERVICES));
+
+app.use(express.json());
 
 app.all('/*', (req, res) => {
   const [, serviceName] = req.originalUrl.split('/');
