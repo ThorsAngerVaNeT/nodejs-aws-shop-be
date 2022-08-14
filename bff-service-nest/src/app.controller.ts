@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
-  @All(['/:service', '/:service/:id'])
+  @All(['/:service', '/:service/*'])
   async processAll(@Req() req, @Res() res) {
     const { body, method, originalUrl } = req;
     const result = await this.appService.processResponse(

@@ -36,12 +36,14 @@ export class AppService {
 
     try {
       const isCacheable = method === 'GET' && originalUrl === '/products';
+
       if (isCacheable) {
         const cache = await this.cacheManager.get(originalUrl);
         if (cache) {
           return cache;
         }
       }
+
       const response = await this.httpService.axiosRef.request({
         method,
         url: `${serviceUrl}${originalUrl}`,
