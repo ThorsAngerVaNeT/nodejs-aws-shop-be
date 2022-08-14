@@ -35,11 +35,15 @@ export class AppService {
     }
 
     try {
-      const isCacheable = method === 'GET' && originalUrl === '/products';
+      const isCacheable =
+        method === 'GET' &&
+        originalUrl === '/products' &&
+        !Object.keys(body).length;
 
       if (isCacheable) {
         const cache = await this.cacheManager.get(originalUrl);
         if (cache) {
+          console.log('RESPONSE FROM CACHE');
           return cache;
         }
       }

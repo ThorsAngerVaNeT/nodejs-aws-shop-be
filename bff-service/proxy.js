@@ -4,7 +4,7 @@ import NodeCache from 'node-cache';
 const cacheService = new NodeCache({ stdTTL: 120, checkperiod: 120 });
 
 const preReqCacheCheck = (req, res, next) => {
-  if (req.originalUrl === '/products' && req.method === 'GET') {
+  if (req.originalUrl === '/products' && req.method === 'GET' && req.body === '') {
     const cacheValue = cacheService.get('getProductsList');
     if (cacheValue) {
       console.log('RESPONSE FROM CACHE');
@@ -20,7 +20,7 @@ const preReqCacheCheck = (req, res, next) => {
 
 const onProxyRes = async (responseBuffer, proxyRes, req, res) => {
   const response = responseBuffer.toString('utf8');
-  if (req.originalUrl === '/products' && req.method === 'GET') {
+  if (req.originalUrl === '/products' && req.method === 'GET' && req.body === '') {
     const cacheValue = cacheService.get('getProductsList');
     if (!cacheValue) {
       cacheService.set('getProductsList', response);
