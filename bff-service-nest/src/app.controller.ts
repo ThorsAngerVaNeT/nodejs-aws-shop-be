@@ -8,9 +8,9 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
   @All(['/:service', '/:service/:id'])
   async processAll(@Req() req, @Res() res) {
-    const { body, method } = req;
+    const { body, method, originalUrl } = req;
     const result = await this.appService.processResponse(
-      req.originalUrl,
+      originalUrl,
       method,
       body,
     );
