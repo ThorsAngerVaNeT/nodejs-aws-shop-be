@@ -9,6 +9,9 @@ const preReqCacheCheck = (req, res, next) => {
     if (cacheValue) {
       console.log('RESPONSE FROM CACHE');
       res.setHeader('content-type', 'application/json');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'OPTIONS,GET');
       return res.status(200).end(cacheValue);
     }
   }
