@@ -7,6 +7,8 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get('port');
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0', () => {
+    console.log(`Nest.js and running on port: ${port}`);
+  });
 }
 bootstrap();

@@ -1,5 +1,5 @@
 export default () => ({
-  port: parseInt(process.env.PORT ?? '3001', 10),
+  port: parseInt(process.env.PORT ?? '3002', 10),
   services: Object.fromEntries(
     Object.keys(process.env)
       .filter((key) => key.endsWith('_SERVICE'))

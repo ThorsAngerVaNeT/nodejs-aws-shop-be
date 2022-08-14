@@ -1,5 +1,7 @@
 import {
   BadGatewayException,
+  CACHE_MANAGER,
+  Inject,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -12,6 +14,7 @@ export class AppService {
   constructor(
     private configService: ConfigService,
     private httpService: HttpService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager,
   ) {}
 
   getServiceUrlFromOriginalUrl(originalUrl: string): string | undefined {
@@ -25,7 +28,6 @@ export class AppService {
     method: Method,
     body: Record<string, string>,
   ) {
-    console.log('body', body, method);
     const serviceUrl = this.getServiceUrlFromOriginalUrl(originalUrl);
 
     if (!serviceUrl) {
@@ -33,17 +35,31 @@ export class AppService {
     }
 
     try {
-      const result = await this.httpService.axiosRef.request({
+      const isCacheable = method === 'GET' && originalUrl === '/products';
+      if (isCacheable) {
+        const cache = await this.cacheManager.get(originalUrl);
+        if (cache) {
+          return cache;
+        }
+      }
+      const response = await this.httpService.axiosRef.request({
         method,
         url: `${serviceUrl}${originalUrl}`,
         ...(Object.keys(body).length > 0 && { data: body }),
       });
 
-      return {
-        status: result.status,
-        data: result.data,
-        headers: result.headers,
+      const result = {
+        status: response.status,
+        data: response.data,
+        headers: response.headers,
       };
+
+      if (isCacheable) {
+        const args = [originalUrl, result, { ttl: 120 }];
+        await this.cacheManager.set(...args);
+      }
+
+      return result;
     } catch (e) {
       if (e.response) {
         return {
